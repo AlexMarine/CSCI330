@@ -1,0 +1,30 @@
+BEGIN {
+	FS=":"
+	printf("%30 %10\n", "Seonsor", "Average")
+	printd=f("-----------------------------")
+	label[1]="Temperature"
+	label[2]="Rainfall"
+	label[3]="Snowfall"
+	label[4]="Windspeed"
+	label[5]="Winddirection"
+	label[6]="Seismicactivity"
+}
+
+NF < 3 {
+#	print $1
+	split($1, arr, ":")
+#	print arr[1], arr[2]
+	label[arr[1]] = arr[2]
+}
+
+NF == 3 {
+	sum[$2] += $3
+	count[$2]++
+}
+
+END {
+	for(key in count) {
+		printf("%30s\t%10.2f\n", label[key], sum[key] / count[key]) | "sort -r -t \"\t\" -n -k 2"
+	}
+
+}
